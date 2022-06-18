@@ -43,8 +43,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     onPressed: () {
                       if (kDebugMode) {
                         print('Chooser selected');
-                        showDatePicker();
                       }
+                      showDatePicker();
                     },
                   ),
                 ),

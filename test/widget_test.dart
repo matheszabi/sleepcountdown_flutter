@@ -52,6 +52,7 @@ void main() {
     final f5 = find.text(curYear.toString()).last;
     expect(f5, findsOneWidget);
 
+    // scroll down the year
     await tester.dragFrom(tester.getCenter(f5), const Offset(0.0, -50.0));
 
     // wait for all
@@ -64,5 +65,16 @@ void main() {
     expect(curYear < selYear, true);
 
     expect(homePageState1year.daysToSleep >= 365, true);
+
+    // find and press  the OK button
+    final f6 = find.text('OK');
+    expect(f6, findsOneWidget);
+    await tester.tap(f6);
+
+    // wait for all
+    await tester.pumpAndSettle();
+
+    final f4NoMore = find.byType(CupertinoDatePicker);
+    expect(f4NoMore, findsNothing);
   });
 }

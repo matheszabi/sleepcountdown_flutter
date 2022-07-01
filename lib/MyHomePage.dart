@@ -9,10 +9,10 @@ class MyHomePage extends StatefulWidget {
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MyHomePage> createState() => MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class MyHomePageState extends State<MyHomePage> {
   DateTime selectedDate = DateTime.now();
   int daysToSleep = 0;
   DateFormat formatter = DateFormat("dd.MMMM.yyyy");
@@ -60,31 +60,55 @@ class _MyHomePageState extends State<MyHomePage> {
         ));
   }
 
-  void showDatePicker() {
-    showCupertinoModalPopup(
+  /*
+   * Shows a modal iOS-style popup that slides up from the bottom of the screen.
+   * Such a popup is an alternative to a menu or a dialog and prevents the user from interacting with the rest of the app.
+   */
+  Future showDatePicker() {
+    return showCupertinoModalPopup(
         context: context,
         builder: (BuildContext builder) {
           return Container(
-            height: MediaQuery.of(context).copyWith().size.height * 0.25,
+            height: MediaQuery.of(context).copyWith().size.height * 0.5,
             color: Colors.white,
-            child: CupertinoDatePicker(
-              mode: CupertinoDatePickerMode.date,
-              onDateTimeChanged: (value) {
-                if (value != selectedDate) {
-                  setState(() {
-                    selectedDate = value;
-                    DateTime endOfSelDay = DateTime(selectedDate.year,
-                        selectedDate.month, selectedDate.day, 23, 59, 59, 999);
-                    Duration difference =
-                        endOfSelDay.difference(DateTime.now());
+            child: Column(
+              children: [
+                SizedBox(
+                  height: MediaQuery.of(context).copyWith().size.height * 0.4,
+                  child: CupertinoDatePicker(
+                    //minimumDate: DateTime.now(),
+                    mode: CupertinoDatePickerMode.date,
+                    onDateTimeChanged: (value) {
+                      if (value != selectedDate) {
+                        setState(() {
+                          selectedDate = value;
+                          DateTime endOfSelDay = DateTime(
+                              selectedDate.year,
+                              selectedDate.month,
+                              selectedDate.day,
+                              23,
+                              59,
+                              59,
+                              999);
+                          Duration difference =
+                              endOfSelDay.difference(DateTime.now());
 
-                    daysToSleep = difference.inDays;
-                  });
-                }
-              },
-              initialDateTime: DateTime.now(),
-              minimumYear: 2022,
-              maximumYear: 2030,
+                          daysToSleep = difference.inDays;
+                        });
+                      }
+                    },
+                    initialDateTime: DateTime.now(),
+                    minimumYear: 2022,
+                    maximumYear: 2030,
+                  ),
+                ),
+
+                // Close the modal
+                CupertinoButton(
+                  child: const Text('OK'),
+                  onPressed: () => Navigator.of(context).pop(),
+                )
+              ],
             ),
           );
         });
